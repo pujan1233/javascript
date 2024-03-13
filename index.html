@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .flex {
+        display: flex;
+        width: max-content;
+      }
+      .f-col {
+        flex-direction: column;
+      }
+      .f-gap-1 {
+        gap: 0.5rem;
+      }
+      .err-text {
+        color: red;
+        font-size: 0.72rem;
+        height: 1rem;
+      }
+      .hide {
+        visibility: hidden;
+      }
+      .show {
+        visibility: visible;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      table tr th {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="first">
+      <form action="" id="userForm">
+        <div class="flex f-col f-gap-1">
+          <div class="flex f-col f-gap-1">
+            <label for="fname">First Name</label>
+            <input type="text" id="fname" />
+            <span class="err-text hide" id="fnameErr"></span>
+          </div>
+          <div class="flex f-col f-gap-1">
+            <label for="lname">Last Name</label>
+            <input type="text" id="lname" />
+            <span class="err-text hide" id="lnameErr"></span>
+          </div>
+        </div>
+      </form>
+      <button id="log">login</button>
+      <button id="logout">logout</button>
+      <button id="create">regtistration</button>
+    </div>
+    <table id="mytable">
+      <tr>
+        <th>firstname</th>
+        <th>lastname</th>
+      </tr>
+    </table>
+
+    <script>
+      const fname = document.getElementById("fname");
+      const lname = document.getElementById("lname");
+      const fnameErr = document.getElementById("fnameErr");
+      const lnameErr = document.getElementById("lnameErr");
+
+      const userForm = document.getElementById("userForm");
+
+      const lsKey = "pujan_sys_users";
+      const fetchUsers = () => {
+        return localStorage.getItem(lsKey)
+          ? JSON.parse(localStorage.getItem(lsKey))
+          : [];
+      };
+      const register = () => {
+        let fieldErr = false;
+        if (fname.value.length < 1) {
+          fnameErr.classList.add("show");
+          fnameErr.innerText = "First Name is required";
+          fieldErr = true;
+          setTimeout(() => {
+            fnameErr.classList.remove("show");
+            fnameErr.classList.add("hide");
+          }, 6000);
+        }
+        if (lname.value.length < 1) {
+          lnameErr.classList.add("show");
+          lnameErr.innerText = "Last Name is required";
+          fieldErr = true;
+          setTimeout(() => {
+            lnameErr.classList.remove("show");
+            lnameErr.classList.add("hide");
+          }, 3000);
+        }
+
+        if (fieldErr) return;
+
+        const users = fetchUsers();
+        const user = {
+          id: Date.now(),
+          fname: fname.value,
+          lname: lname.value,
+        };
+        users.push(user);
+        localStorage.setItem(lsKey, JSON.stringify(users));
+        userForm.reset();
+      };
+
+      const loginbtn = document.getElementById("log");
+      const out = document.getElementById("logout");
+      const create = document.getElementById("create");
+
+      create.addEventListener("click", (e) => {
+        e.preventDefault();
+        register();
+      });
+
+      const newtable = document.getElementById("mytable");
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+      const cell1 = document.innerText;
+    </script>
+  </body>
+</html>
